@@ -13,6 +13,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+import pycurl
+from io import BytesIO
+
+ALLOWED_HOSTS = []
+# Determine Public IP address of EC2 instance
+buffer = BytesIO()
+c = pycurl.Curl()
+c.setopt(c.URL, 'checkip.amazonaws.com')
+c.setopt(c.WRITEDATA, buffer)
+c.perform()
+c.close()
+# Body is a byte string, encoded. Decode it first.
+ALLOWED_HOSTS.append(buffer.getvalue().decode('iso-8859-1').strip())
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +40,7 @@ SECRET_KEY = 'django-insecure-j734e3_(1-@5etn795+e12%sc1))$k7*f9+@g*7sp&i%ibzwqw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
 
 
 # Application definition
